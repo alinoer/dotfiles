@@ -21,6 +21,10 @@ return {
         "scss",
         "sql",
         "svelte",
+        "vue",
+        "javascript",
+        "typescript",
+        "html",
       },
 
       -- matchup = {
