@@ -15,6 +15,7 @@ vim.opt.cmdheight = 1
 vim.opt.laststatus = 3
 vim.opt.expandtab = true
 vim.opt.scrolloff = 10
+vim.opt.smoothscroll = true
 vim.opt.shell = "/bin/zsh"
 vim.opt.backupskip = { "/tmp/*", "/private/tmp/*" }
 vim.opt.inccommand = "split"
