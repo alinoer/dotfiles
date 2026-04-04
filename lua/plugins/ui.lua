@@ -1,74 +1,78 @@
+-- UI plugins: colorscheme, statusline
 return {
-  -- messages, cmdline and the popupmenu
+  -- Colorscheme
   {
-    "folke/noice.nvim",
-    opts = function(_, opts)
-      table.insert(opts.routes, {
-        filter = {
-          event = "notify",
-          find = "No information available",
-        },
-        opts = { skip = true },
-      })
-      local focused = true
-      vim.api.nvim_create_autocmd("FocusGained", {
-        callback = function()
-          focused = true
-        end,
-      })
-      vim.api.nvim_create_autocmd("FocusLost", {
-        callback = function()
-          focused = false
-        end,
-      })
-      table.insert(opts.routes, 1, {
-        filter = {
-          cond = function()
-            return not focused
-          end,
-        },
-        view = "notify_send",
-        opts = { stop = false },
-      })
-
-      opts.commands = {
-        all = {
-          -- options for the message history that you get with `:Noice`
-          view = "split",
-          opts = { enter = true, format = "details" },
-          filter = {},
-        },
-      }
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "markdown",
-        callback = function(event)
-          vim.schedule(function()
-            require("noice.text.markdown").keys(event.buf)
-          end)
-        end,
-      })
-
-      opts.presets.lsp_doc_border = true
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    opts = {
+      transparent_background = true,
+      flavour = "mocha",
+      show_end_of_buffer = false,
+      styles = {
+        comments = { "italic" },
+        conditionals = { "italic" },
+      },
+      integrations = {
+        gitsigns = true,
+        treesitter = true,
+      },
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
     end,
   },
 
+  -- Icons
+  { "nvim-tree/nvim-web-devicons" },
+
+  -- Statusline
   {
-    "rcarriga/nvim-notify",
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
     opts = {
-      timeout = 5000,
+      options = {
+        theme = "auto",
+        globalstatus = true,
+      },
+      sections = {
+        lualine_a = { "mode" },
+        lualine_b = { "branch" },
+        lualine_c = {
+          {
+            "filetype",
+            icon_only = true,
+            separator = "",
+            padding = { left = 1, right = 0 },
+          },
+          { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+        },
+        lualine_x = {
+          {
+            "diff",
+            symbols = {
+              added = " ",
+              modified = " ",
+              removed = " ",
+            },
+          },
+        },
+        lualine_y = {
+          { "progress", separator = " ", padding = { left = 1, right = 0 } },
+          { "location", padding = { left = 0, right = 1 } },
+        },
+        lualine_z = {
+          function()
+            return " " .. os.date("%R")
+          end,
+        },
+      },
     },
   },
 
-  {
-    "snacks.nvim",
-    opts = {
-      scroll = { enabled = false },
-    },
-    keys = {},
-  },
-
-  -- filename
+  -- Filename in top right
   {
     "b0o/incline.nvim",
     dependencies = { "catppuccin/nvim" },
@@ -84,15 +88,12 @@ return {
           },
         },
         window = { margin = { vertical = 0, horizontal = 1 } },
-        hide = {
-          cursorline = true,
-        },
+        hide = { cursorline = true },
         render = function(props)
           local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
           if vim.bo[props.buf].modified then
             filename = "[+] " .. filename
           end
-
           local icon, color = require("nvim-web-devicons").get_icon_color(filename)
           return { { icon, guifg = color }, { " " }, { filename } }
         end,
@@ -100,104 +101,84 @@ return {
     end,
   },
 
-  -- statusline
-  {
-    "nvim-lualine/lualine.nvim",
-    opts = function(_, opts)
-      local LazyVim = require("lazyvim.util")
-      opts.sections.lualine_c[4] = {
-        LazyVim.lualine.pretty_path({
-          length = 0,
-          relative = "cwd",
-          modified_hl = "MatchParen",
-          directory_hl = "",
-          filename_hl = "Bold",
-          modified_sign = "",
-          readonly_icon = " 󰌾 ",
-        }),
-      }
-    end,
-  },
-
   -- Smooth scrolling
   {
     "karb94/neoscroll.nvim",
     event = "VeryLazy",
-    config = function()
-      require("neoscroll").setup({
-        mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "<C-y>", "<C-e>", "zt", "zz", "zb" },
-        hide_cursor = true,
-        stop_eof = true,
-        respect_scrolloff = false,
-        cursor_scrolls_alone = true,
-        easing_function = "quadratic",
-        pre_hook = nil,
-        post_hook = nil,
-        performance_mode = false,
-      })
-    end,
+    opts = {
+      mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "<C-y>", "<C-e>", "zt", "zz", "zb" },
+      hide_cursor = true,
+      stop_eof = true,
+      respect_scrolloff = false,
+      cursor_scrolls_alone = true,
+      easing_function = "quadratic",
+    },
   },
 
-  -- Smear cursor
+  -- Animated cursor
   {
     "sphamba/smear-cursor.nvim",
-    event = "InsertEnter",
-    cmd = "SmearCursorToggle",
+    event = "VeryLazy",
     opts = {},
     keys = {
-      { "tsc", "<cmd>SmearCursorToggle<cr>", desc = "Toggle Animation Cursor" },
+      { "<leader>tsc", "<cmd>SmearCursorToggle<cr>", desc = "Toggle Animation Cursor" },
     },
   },
 
+  -- Git signs
   {
-    "folke/zen-mode.nvim",
-    cmd = "ZenMode",
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
-      plugins = {
-        gitsigns = true,
-        tmux = true,
-        kitty = { enabled = false, font = "+2" },
+      signs = {
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▎" },
+        untracked = { text = "▎" },
       },
     },
-    keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } },
   },
 
+  -- ─── Indent Visual ───────────────────────────────────────
+  -- indent-blankline: garis indent — sangat membantu di Go & nested TS
   {
-    "MeanderingProgrammer/render-markdown.nvim",
-    enabled = false,
-  },
-
-  {
-    "folke/snacks.nvim",
-    opts = {
-      dashboard = {
-        preset = {
-          header = [[
- ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗
- ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║
- ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║
- ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║
- ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║
- ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝
-
-NVIM v]]
-            .. vim.version().major
-            .. "."
-            .. vim.version().minor
-            .. "."
-            .. vim.version().patch
-            .. [[
-
-
-It's a terminal, but cooler — yes, I type everything.
-Works on my machine
-Yesterday Ali was smart. Today Ali uses Neovim.
-git add . && git commit -m 'fix'
-I use Neovim btw.
-]],
-          keys = {},
-        },
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    main  = "ibl",
+    opts  = {
+      indent = {
+        char      = "│",    -- karakter garis — lebih tipis dari default
+        tab_char  = "│",
+      },
+      scope = {
+        enabled    = true,
+        show_start = false,  -- jangan tampilkan underline di awal scope
+        show_end   = false,
+      },
+      exclude = {
+        filetypes = { "lazy", "mason", "help", "dashboard" },
       },
     },
+  },
+
+  -- ─── Notifikasi ──────────────────────────────────────────
+  -- nvim-notify: notifikasi LSP & plugin jadi lebih rapi, tidak ganggu flow
+  {
+    "rcarriga/nvim-notify",
+    event = "VeryLazy",
+    opts  = {
+      timeout      = 5000,       -- 2 detik, tidak terlalu lama
+      max_width    = 50,
+      render       = "minimal",  -- tanpa border mewah
+      stages       = "static",   -- tanpa animasi — lebih cepat
+      top_down     = false,      -- notifikasi dari bawah ke atas
+    },
+    config = function(_, opts)
+      local notify = require("notify")
+      notify.setup(opts)
+      vim.notify = notify   -- override vim.notify global
+    end,
   },
 }

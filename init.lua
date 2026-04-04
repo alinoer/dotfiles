@@ -1,9 +1,13 @@
-if vim.loader then
-  vim.loader.enable()
-end
+-- Entry point, hanya require modul
 
-_G.dd = function(...)
-  vim.print(...)
-end
+-- Set leader keys
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
-require("config.lazy")
+-- Load core configuration
+require("core.options")
+require("core.keymaps")
+require("core.autocmds")
+
+-- Load plugins
+require("plugins")
