@@ -41,3 +41,10 @@ opt.splitright = true
 -- Performance
 opt.updatetime = 250
 opt.timeoutlen = 300
+
+-- Folding
+opt.foldenable = true
+opt.foldmethod = "indent"
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+opt.foldcolumn = "1"

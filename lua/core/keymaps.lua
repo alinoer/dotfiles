@@ -40,8 +40,8 @@ map("v", "<A-k>", ":m '<-2<cr>gv=gv",     { desc = "Pindah baris atas" })
 -- ─── Buffer ──────────────────────────────────────────────
 -- Pakai Shift-h/l saja — lebih cepat dari [b/]b
 -- [b/]b dihapus karena duplikat
-map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Buffer sebelumnya" })
-map("n", "<S-l>", "<cmd>bnext<cr>",     { desc = "Buffer berikutnya" })
+-- map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Buffer sebelumnya" })
+-- map("n", "<S-l>", "<cmd>bnext<cr>",     { desc = "Buffer berikutnya" })
 map("n", "<leader>bb", "<cmd>e #<cr>",  { desc = "Switch buffer terakhir" })
 map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Hapus buffer" })
 

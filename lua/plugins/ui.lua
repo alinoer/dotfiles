@@ -181,4 +181,41 @@ return {
       vim.notify = notify   -- override vim.notify global
     end,
   },
+
+  -- ─── Bufferline ─────────────────────────────────────────
+  -- bufferline: tab yang lebih informatif, bisa langsung close dari tab
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = {
+      { "<S-l>",      "<cmd>BufferLineCycleNext<cr>",      desc = "Buffer berikutnya" },
+      { "<S-h>",      "<cmd>BufferLineCyclePrev<cr>",      desc = "Buffer sebelumnya" },
+      { "<leader>bp", "<cmd>BufferLineTogglePin<cr>",      desc = "Pin buffer" },
+      { "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<cr>", desc = "Tutup buffer tidak di-pin" },
+      { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>",   desc = "Tutup buffer lain" },
+      { "<leader>br", "<cmd>BufferLineCloseRight<cr>",    desc = "Tutup buffer kanan" },
+      { "<leader>bl", "<cmd>BufferLineCloseLeft<cr>",     desc = "Tutup buffer kiri" },
+    },
+    opts = {
+      options = {
+        diagnostics = "nvim_lsp",
+        diagnostics_indicator = function(_, _, diag)
+          local icons = { error = " ", warning = " " }
+          local ret = (diag.error and icons.error .. diag.error .. " " or "")
+            .. (diag.warning and icons.warning .. diag.warning or "")
+          return vim.trim(ret)
+        end,
+
+        show_buffer_close_icons = true,
+        show_close_icon         = false,
+        separator_style         = "thin",   -- ganti dari "slant" ke "thin"
+        always_show_bufferline  = true,
+
+        -- Hapus icon filetype kalau mau lebih minimal
+        show_buffer_icons = false,
+
+        sort_by = "insert_after_current",
+      },
+    },
+  },
 }
