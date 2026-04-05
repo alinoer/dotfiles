@@ -23,6 +23,7 @@ require("lazy").setup({
     { import = "plugins.lsp" },
     { import = "plugins.treesitter" },
     { import = "plugins.editing" },
+    { import = "plugins.terminal" },
   },
   defaults = { lazy = false },
   checker = { enabled = false },

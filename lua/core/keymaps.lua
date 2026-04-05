@@ -94,6 +94,7 @@ if wk_ok then
     { "<leader>gt", group = "git toggle" },
     { "<leader>l",  group = "lsp" },
     { "<leader>q",  group = "quickfix" },
+    { "<leader>t",  group = "terminal" },
     { "<leader>w",  group = "window" },
   })
 end
