@@ -42,6 +42,9 @@ opt.splitright = true
 opt.updatetime = 250
 opt.timeoutlen = 300
 
+-- Auto reload files
+opt.autoread = true
+
 -- Folding
 opt.foldenable = true
 opt.foldmethod = "indent"

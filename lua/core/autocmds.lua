@@ -41,3 +41,14 @@ autocmd("BufWritePre", {
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
   end,
 })
+
+-- Auto reload files when changed externally
+autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  group = vim.api.nvim_create_augroup("auto_reload", { clear = true }),
+  pattern = "*",
+  callback = function()
+    if vim.fn.getcmdwintype() == "" then
+      vim.cmd("checktime")
+    end
+  end,
+})

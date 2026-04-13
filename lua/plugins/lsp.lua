@@ -135,21 +135,16 @@ return {
         capabilities = cmp_lsp.default_capabilities(capabilities)
       end
       
-      -- Very simple server setup - just the basics that work
-      -- We'll disable the warning filter and just use what works
+      -- Very simple server setup using new vim.lsp.config API
       vim.notify = notify -- Restore notify immediately
       
-      -- TypeScript
-      pcall(function()
-        lspconfig.ts_ls.setup({
+      -- Setup LSP servers with the new API
+      local servers = {
+        ts_ls = {
           on_attach = on_attach,
           capabilities = capabilities,
-        })
-      end)
-
-      -- ESLint
-      pcall(function()
-        lspconfig.eslint.setup({
+        },
+        eslint = {
           on_attach = function(client, bufnr)
             on_attach(client, bufnr)
             vim.api.nvim_create_autocmd("BufWritePre", {
@@ -158,20 +153,12 @@ return {
             })
           end,
           capabilities = capabilities,
-        })
-      end)
-      
-      -- Go
-      pcall(function()
-        lspconfig.gopls.setup({
+        },
+        gopls = {
           on_attach = on_attach,
           capabilities = capabilities,
-        })
-      end)
-      
-      -- Lua
-      pcall(function()
-        lspconfig.lua_ls.setup({
+        },
+        lua_ls = {
           on_attach = on_attach,
           capabilities = capabilities,
           settings = {
@@ -185,8 +172,27 @@ return {
               telemetry = { enable = false },
             },
           },
-        })
-      end)
+        },
+      }
+      
+      -- Use new vim.lsp.config API if available, fallback to lspconfig
+      if vim.lsp.config then
+        for server, config in pairs(servers) do
+          pcall(function()
+            vim.lsp.config[server] = config
+          end)
+        end
+      else
+        -- Fallback to old lspconfig for older Neovim versions
+        local ok, lspconfig = pcall(require, "lspconfig")
+        if ok then
+          for server, config in pairs(servers) do
+            pcall(function()
+              lspconfig[server].setup(config)
+            end)
+          end
+        end
+      end
     end,
   },
 
