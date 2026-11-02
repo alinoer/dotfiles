@@ -45,7 +45,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 Buka `nvim` sekali: plugin dan parser treesitter ter-install otomatis.
 
-**Kebutuhan versi:** Neovim **0.12+** (nvim-treesitter branch `main`), tmux **3.1+**, `tree-sitter` CLI **0.26+** (dari brew, bukan npm).
+**Kebutuhan versi:** Neovim **0.11.2+** (disarankan 0.12), tmux **3.1+**, `tree-sitter` CLI **0.26+** (dari brew, bukan npm).
 
 ---
 
@@ -103,150 +103,58 @@ Plugin: `tpm`, `vim-tmux-navigator`, `tmux-resurrect` (manual, tidak auto-restor
 
 ---
 
-# Neovim
+# Neovim (LazyVim)
 
-Leader: **`Space`**. Tekan `Space` lalu tunggu sebentar → **which-key** menampilkan semua shortcut.
-Cari shortcut apa pun: `Space sk`.
+Distribusi [LazyVim](https://www.lazyvim.org). Daftar lengkap shortcut bawaan: https://www.lazyvim.org/keymaps
 
-### Dasar
+Leader: **`Space`**. Tekan `Space` lalu tunggu → **which-key** menampilkan semua shortcut. Cari keymap: `Space sk`.
+
+### Isi config ini
+| File | Isi |
+|---|---|
+| `lazyvim.json` | Extras yang aktif (atur lewat `:LazyExtras`) |
+| `lua/config/keymaps.lua` | Keymap tambahan pribadi |
+| `lua/config/options.lua` | Option tambahan (masih kosong, pakai default LazyVim) |
+| `lua/plugins/personal.lua` | Plugin & override pribadi |
+
+**Extras aktif:** copilot, mini-surround, prettier, lang go / json / markdown / typescript, eslint.
+**Tambahan pribadi:** catppuccin mocha transparan, vim-tmux-navigator, oil.nvim, `jk`/`jj` untuk Esc, scroll & pencarian dengan cursor di tengah.
+
+### Shortcut yang paling sering dipakai
 | Tombol | Fungsi |
 |---|---|
 | `jk` / `jj` | Keluar insert mode |
-| `Esc` | Hapus highlight pencarian |
 | `Ctrl-s` | Save |
-| `Space qq` | Keluar semua |
-| `Alt-j` / `Alt-k` | Pindah baris ke bawah/atas |
-| `<` / `>` (visual) | Indent tanpa kehilangan seleksi |
-| `Ctrl-d` / `Ctrl-u` | Scroll setengah layar (cursor tetap di tengah) |
-
-### Window & buffer
-| Tombol | Fungsi |
-|---|---|
 | `Ctrl-h/j/k/l` | Pindah split, **juga ke pane tmux** |
-| `Ctrl-Arrow` | Resize split |
-| `Space wv` / `Space wh` / `Space wq` | Split vertikal / horizontal / tutup |
 | `Shift-h` / `Shift-l` | Buffer sebelumnya / berikutnya |
-| `Space bb` | Kembali ke buffer terakhir |
-| `Space bd` | Tutup buffer |
-| `Space bo` / `br` / `bl` | Tutup buffer lain / kanan / kiri |
-| `Space bp` / `bP` | Pin buffer / tutup semua yang tidak di-pin |
-
-### Cari file & teks (Telescope)
-| Tombol | Fungsi |
-|---|---|
-| `Space ff` | Cari file |
-| `Space fg` | Cari teks (live grep) |
-| `Space fb` | Daftar buffer |
-| `Space ?` | File yang baru dibuka |
-| `Space sk` | Cari keymap |
-| `Space sh` | Cari help |
-| `Space sd` | Diagnostics |
-| `Space sr` / `Space ss` | References / symbol (LSP) |
-| `Space st` | Semua TODO/FIXME |
-| Di Telescope: `Ctrl-j/k` | Naik/turun |
-| Di Telescope: `Ctrl-q` | Kirim hasil ke quickfix |
-
-### File manager (Oil)
-| Tombol | Fungsi |
-|---|---|
-| `-` atau `Space o` | Buka folder file saat ini |
-| Di Oil: edit seperti teks | Rename, hapus (`dd`), pindah (`dd` + `p`), lalu `:w` untuk menerapkan |
-| Di Oil: `g.` | Tampilkan/sembunyikan dotfiles |
-| Di Oil: `Ctrl-p` | Preview |
-
-### LSP (aktif saat language server jalan)
-| Tombol | Fungsi |
-|---|---|
-| `gd` / `gD` | Definition / declaration |
-| `gi` / `gt` | Implementation / type definition |
-| `gr` | References |
-| `K` | Dokumentasi (hover) |
-| `gK` (normal), `Ctrl-s` (insert) | Signature help |
-| `Space lr` | Rename |
-| `Space la` | Code action |
-| `Space lf` | Format |
-| `Space ld` | Detail diagnostic di baris ini |
-| `[d` / `]d` | Diagnostic sebelumnya / berikutnya |
-| `Space lm` | Buka Mason (install language server) |
-
-Server: `ts_ls`, `eslint` (auto-fix saat save), `gopls`, `lua_ls`.
-
-### Autocomplete (nvim-cmp)
-| Tombol | Fungsi |
-|---|---|
-| `Ctrl-j` / `Ctrl-k` | Pilih item berikutnya / sebelumnya |
-| `Enter` | Pakai item terpilih |
-| `Ctrl-Space` | Munculkan completion |
-| `Ctrl-e` | Tutup |
-| `Tab` / `Shift-Tab` | Lompat di dalam snippet |
-
-### Copilot (insert mode)
-| Tombol | Fungsi |
-|---|---|
-| `Ctrl-j` | Terima saran (saat menu cmp tidak terbuka) |
-| `Ctrl-l` | Terima satu kata |
-| `Ctrl-k` / `Ctrl-h` | Saran berikutnya / sebelumnya |
-| `Ctrl-]` | Tolak saran |
-
-### Treesitter (struktur kode)
-| Tombol | Fungsi |
-|---|---|
-| `af` / `if` | Seluruh function / isi function (contoh: `daf`, `cif`, `vaf`) |
-| `ac` / `ic` | Class |
-| `aa` / `ia` | Argumen |
-| `ab` / `ib` | Block |
-| `]f` / `[f` | Function berikutnya / sebelumnya (`]F` / `[F` = ujung function) |
-| `]c` / `[c` | Class berikutnya / sebelumnya |
-| `Space sa` / `Space sA` | Tukar argumen ke kanan / kiri |
-| `v` lalu `an` / `in` | Perluas / perkecil seleksi berdasarkan struktur kode |
-
-### Editing
-| Tombol | Fungsi |
-|---|---|
-| `gcc` / `gc` (visual) | Toggle komentar |
-| `sa` + objek + karakter | Tambah pembungkus (contoh: `saiw"` → `"kata"`) |
-| `sd"` / `sr"'` | Hapus / ganti pembungkus |
-| `Space y` / `Space Y` | Copy ke clipboard sistem |
+| `Space bd` / `Space bo` | Tutup buffer / tutup buffer lain |
+| `Space Space` atau `Space ff` | Cari file |
+| `Space /` | Cari teks di project (grep) |
+| `Space ,` | Daftar buffer |
+| `Space fr` | File yang baru dibuka |
+| `Space e` | File explorer (sidebar) |
+| `-` | Oil: edit folder seperti teks (`:w` untuk menerapkan) |
+| `Space gg` | Lazygit |
+| `]h` / `[h`, `Space ghp` | Hunk git berikutnya / sebelumnya, preview hunk |
+| `gd` / `gr` / `K` | Definition / references / dokumentasi |
+| `Space cr` / `Space ca` / `Space cf` | Rename / code action / format |
+| `Space cd`, `]d` / `[d` | Detail diagnostic, diagnostic berikutnya / sebelumnya |
+| `Space xx` | Daftar semua masalah (Trouble) |
+| `Ctrl-/` | Toggle terminal |
+| `gsa` / `gsd` / `gsr` | Surround: tambah / hapus / ganti pembungkus (contoh `gsaiw"`) |
+| `gcc` / `gc` | Toggle komentar |
+| `Alt-j` / `Alt-k` | Pindah baris |
 | `Space p` (visual) | Paste tanpa menimpa register |
-| `Space d` | Hapus tanpa masuk register |
+| `Space l` | Buka Lazy (kelola plugin) |
+| `Space cm` | Buka Mason (language server) |
+| `Space qq` | Keluar |
 
-### Git
-| Tombol | Fungsi |
-|---|---|
-| `Space gg` | Lazygit (floating) |
-| `]h` / `[h` | Perubahan (hunk) berikutnya / sebelumnya |
-| `Space gp` | Preview hunk |
-| `Space gs` / `Space gr` | Stage / reset hunk |
-| `Space gS` / `Space gR` | Stage / reset seluruh file |
-| `Space gb` | Blame baris ini |
-| `Space gtb` / `Space gtd` | Toggle blame inline / tampilkan baris terhapus |
-| `ih` | Text object hunk (contoh: `vih`) |
+Copilot tampil sebagai saran di menu completion (blink.cmp); `Tab` untuk menerima.
 
-### Terminal
-| Tombol | Fungsi |
-|---|---|
-| `Ctrl-\` | Toggle terminal (vertikal) |
-| `Space tf` / `th` / `tv` | Terminal float / horizontal / vertikal |
-| `Space tn` / `tp` / `tt` | Node REPL / Python REPL / htop |
-| `Esc` (di terminal) | Kembali ke normal mode |
+Perintah berguna: `:Lazy`, `:LazyExtras`, `:Mason`, `:checkhealth`, `:TSUpdate`.
 
-### Quickfix & lain-lain
-| Tombol | Fungsi |
-|---|---|
-| `Space qo` / `Space qc` | Buka / tutup quickfix |
-| `Space qn` / `Space qp` | Item quickfix berikutnya / sebelumnya |
-| `]t` / `[t` | TODO berikutnya / sebelumnya |
-| `Space tsc` | Toggle animasi cursor |
-| `q` | Tutup jendela help, quickfix, checkhealth, dll |
-
-### Plugin
-- **UI:** catppuccin (mocha, transparan), lualine, bufferline, incline, indent-blankline, nvim-notify, neoscroll, smear-cursor, fidget
-- **Navigasi:** telescope (+ fzf-native), oil, which-key, vim-tmux-navigator
-- **Kode:** nvim-treesitter (`main`), treesitter-textobjects, mason, nvim-lspconfig, nvim-cmp + LuaSnip, copilot
-- **Editing:** mini.pairs, mini.surround, mini.comment, gitsigns, todo-comments
-- **Terminal:** toggleterm (+ lazygit)
-
-Perintah berguna: `:Lazy` (kelola plugin), `:Mason`, `:checkhealth`, `:TSUpdate`.
+Config nvim custom yang lama tersimpan di tag git `nvim-custom-lama`
+(`git show nvim-custom-lama:nvim/.config/nvim/lua/plugins/lsp.lua`, dst).
 
 ---
 
@@ -258,7 +166,7 @@ Perintah berguna: `:Lazy` (kelola plugin), `:Mason`, `:checkhealth`, `:TSUpdate`
 - Split dan window baru terbuka di folder pane saat ini.
 - Ditambah: `focus-events`, `set-clipboard`, true color untuk semua terminal, resize `prefix H/J/K/L`, `detach-on-destroy off`.
 
-**nvim**
+**nvim** — config custom diganti **LazyVim** (lihat di atas). Perbaikan di bawah ini berlaku untuk config lama (tag `nvim-custom-lama`):
 - **Treesitter diperbaiki.** Plugin sudah di branch `main` tapi config masih memakai API lama yang sudah dihapus, sehingga parser, highlight, dan textobjects diam-diam tidak aktif. Ditulis ulang dengan API baru.
 - **LSP** memakai API bawaan Neovim (`vim.lsp.config` / `vim.lsp.enable`); hack yang menyembunyikan peringatan deprecated dihapus.
 - **`Ctrl-k` bentrok** dengan signature help di buffer yang punya LSP, sehingga tidak bisa pindah ke split atas. Signature help pindah ke `gK` / `Ctrl-s` (insert).
