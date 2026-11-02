@@ -48,4 +48,34 @@ return {
       view_options = { show_hidden = false, natural_order = true },
     },
   },
+  -- Terminal: default vertikal (kanan), tetap bisa horizontal (bawah)
+  --   Ctrl-/       toggle terminal vertikal di root project
+  --   <leader>fv   terminal vertikal
+  --   <leader>fh   terminal horizontal (terminal terpisah dari yang vertikal)
+  {
+    "folke/snacks.nvim",
+    opts = {
+      terminal = {
+        win = { position = "right", width = 0.4 },
+      },
+    },
+    keys = {
+      {
+        "<leader>fv",
+        function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root() }) end,
+        desc = "Terminal vertikal",
+      },
+      {
+        "<leader>fh",
+        function()
+          Snacks.terminal.toggle(nil, {
+            cwd = LazyVim.root(),
+            count = 2,
+            win = { position = "bottom", height = 0.3 },
+          })
+        end,
+        desc = "Terminal horizontal",
+      },
+    },
+  },
 }
