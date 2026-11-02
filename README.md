@@ -65,6 +65,49 @@ Token, API key, dan setting yang hanya berlaku di satu mesin disimpan di **`~/.z
 
 ---
 
+# Workflow: AeroSpace → tmux → nvim
+
+Tiga lapis, semuanya pakai `h/j/k/l`, beda modifier per lapis:
+
+| Lapis | Mengatur | Navigasi |
+|---|---|---|
+| **AeroSpace** | aplikasi & workspace | `Hyper + h/j/k/l`, `Hyper + huruf` |
+| **tmux** | session per project, window, pane | prefix `Ctrl-a`, `Ctrl + h/j/k/l` |
+| **nvim** | split & buffer | `Ctrl + h/j/k/l` (mulus dengan pane tmux) |
+
+**Hyper = Caps Lock ditahan** (Karabiner → `ctrl+opt+cmd`). **Caps Lock ditekan sekali = Esc.**
+
+### AeroSpace
+
+| Tombol | Fungsi |
+|---|---|
+| `Hyper + h/j/k/l` | Fokus window |
+| `Hyper + Shift + h/j/k/l` | Pindahkan window |
+| `Hyper + T/B/C/A/D/N/M/E/1/2/3` | Pindah workspace |
+| `Hyper + Shift + huruf` | Kirim window ke workspace |
+| `Hyper + Tab` | Workspace sebelumnya |
+| `Hyper + Shift + Tab` | Pindahkan workspace ke monitor lain |
+| `Hyper + f` / `Hyper + Shift + f` | Fullscreen / floating ↔ tiling |
+| `Hyper + /` / `Hyper + \` | Layout tiles / accordion |
+| `Hyper + -` / `Hyper + =` | Resize |
+| `Hyper + ;` lalu `r` / `Esc` | Reset layout / reload config |
+
+| Workspace | Isi (otomatis) |
+|---|---|
+| **T** | Terminal (Ghostty) |
+| **B** | Browser (Brave, Chrome) |
+| **C** | Chat (Slack, Discord, WhatsApp, Telegram) |
+| **A** | AI (Claude, ChatGPT) |
+| **D** | Dev tools (Postman, TablePlus, DBeaver) |
+| **N** | Notes & calendar (Notion, Obsidian, Calendar) |
+| **M** | Music (Spotify) |
+| **E** | Editor GUI (Zed, VS Code) |
+| **1–3** | Bebas |
+
+Finder, System Settings, Raycast, dll. selalu floating. Tambah aturan app baru: cek app-id dengan `aerospace list-apps`.
+
+---
+
 # tmux
 
 Prefix: **`Ctrl-a`** (ditulis `prefix` di bawah).
