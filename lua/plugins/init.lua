@@ -24,6 +24,7 @@ require("lazy").setup({
     { import = "plugins.treesitter" },
     { import = "plugins.editing" },
     { import = "plugins.terminal" },
+    { import = "plugins.copilot" },
   },
   defaults = { lazy = false },
   checker = { enabled = false },
