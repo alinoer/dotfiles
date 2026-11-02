@@ -114,11 +114,17 @@ Leader: **`Space`**. Tekan `Space` lalu tunggu → **which-key** menampilkan sem
 |---|---|
 | `lazyvim.json` | Extras yang aktif (atur lewat `:LazyExtras`) |
 | `lua/config/keymaps.lua` | Keymap tambahan pribadi |
-| `lua/config/options.lua` | Option tambahan (masih kosong, pakai default LazyVim) |
+| `lua/config/options.lua` | Autoformat mati, layar intro Neovim, Copilot inline |
 | `lua/plugins/personal.lua` | Plugin & override pribadi |
 
 **Extras aktif:** copilot, mini-surround, prettier, lang go / json / markdown / typescript, eslint.
-**Tambahan pribadi:** catppuccin mocha transparan, vim-tmux-navigator, oil.nvim, `jk`/`jj` untuk Esc, scroll & pencarian dengan cursor di tengah.
+**Tambahan pribadi:**
+- Tema catppuccin mocha (background penuh)
+- Home page: layar intro bawaan Neovim (dashboard LazyVim dimatikan)
+- **Tidak ada auto format saat save** (format manual `Space cf`; nyalakan sementara `Space uf` / `Space uF`)
+- Terminal default vertikal di kanan, horizontal tersedia di `Space fh`
+- Copilot sebagai ghost text inline dengan tombol seperti config lama
+- vim-tmux-navigator, oil.nvim (`q`/`Esc` untuk menutup), `jk`/`jj` untuk Esc, scroll & pencarian dengan cursor di tengah
 
 ### Shortcut yang paling sering dipakai
 | Tombol | Fungsi |
@@ -133,14 +139,15 @@ Leader: **`Space`**. Tekan `Space` lalu tunggu → **which-key** menampilkan sem
 | `Space ,` | Daftar buffer |
 | `Space fr` | File yang baru dibuka |
 | `Space e` | File explorer (sidebar) |
-| `-` | Oil: edit folder seperti teks (`:w` untuk menerapkan) |
+| `-` | Oil: edit folder seperti teks (`:w` menerapkan, `q`/`Esc` menutup) |
 | `Space gg` | Lazygit |
 | `]h` / `[h`, `Space ghp` | Hunk git berikutnya / sebelumnya, preview hunk |
 | `gd` / `gr` / `K` | Definition / references / dokumentasi |
 | `Space cr` / `Space ca` / `Space cf` | Rename / code action / format |
 | `Space cd`, `]d` / `[d` | Detail diagnostic, diagnostic berikutnya / sebelumnya |
 | `Space xx` | Daftar semua masalah (Trouble) |
-| `Ctrl-/` | Toggle terminal |
+| `Ctrl-/` / `Space fv` | Terminal vertikal (kanan) |
+| `Space fh` | Terminal horizontal (bawah, terpisah dari yang vertikal) |
 | `gsa` / `gsd` / `gsr` | Surround: tambah / hapus / ganti pembungkus (contoh `gsaiw"`) |
 | `gcc` / `gc` | Toggle komentar |
 | `Alt-j` / `Alt-k` | Pindah baris |
@@ -149,7 +156,15 @@ Leader: **`Space`**. Tekan `Space` lalu tunggu → **which-key** menampilkan sem
 | `Space cm` | Buka Mason (language server) |
 | `Space qq` | Keluar |
 
-Copilot tampil sebagai saran di menu completion (blink.cmp); `Tab` untuk menerima.
+### Copilot (insert mode, ghost text)
+| Tombol | Fungsi |
+|---|---|
+| `Ctrl-j` / `Tab` | Terima saran |
+| `Ctrl-l` | Terima satu kata |
+| `Ctrl-k` / `Ctrl-h` | Saran berikutnya / sebelumnya |
+| `Ctrl-]` | Tolak saran |
+
+Login pertama kali: `:Copilot auth`. Catatan: `Ctrl-h` tidak lagi berfungsi sebagai backspace di insert mode.
 
 Perintah berguna: `:Lazy`, `:LazyExtras`, `:Mason`, `:checkhealth`, `:TSUpdate`.
 
