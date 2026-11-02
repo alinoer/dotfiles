@@ -1,13 +1,13 @@
 -- Plugin & override pribadi di atas LazyVim
 return {
 
-  -- Colorscheme: catppuccin mocha (background penuh, bukan transparan)
+  -- Colorscheme: catppuccin mocha, background transparan (ikut Ghostty)
   {
     "catppuccin/nvim",
     name = "catppuccin",
     opts = {
       flavour = "mocha",
-      transparent_background = false,
+      transparent_background = true,
     },
   },
   {
