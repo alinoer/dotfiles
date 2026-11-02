@@ -1,0 +1,5 @@
+.DS_Store
+*.bak
+tmux/.config/tmux/plugins/
+karabiner/.config/karabiner/automatic_backups/
+fish/.config/fish/fish_variables
