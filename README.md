@@ -9,7 +9,6 @@ Setiap folder di sini adalah satu "paket" yang strukturnya meniru `$HOME`.
 | `tmux` | tmux + TPM | `~/.config/tmux` |
 | `ghostty` | terminal | `~/.config/ghostty` |
 | `aerospace` | tiling window manager | `~/.config/aerospace` |
-| `sketchybar` | menu bar | `~/.config/sketchybar` |
 | `karabiner` | remap keyboard | `~/.config/karabiner` |
 | `git` | `.gitconfig` + global gitignore | `~/.gitconfig`, `~/.config/git` |
 | `zsh` | `.zshrc`, `.zprofile`, `.p10k.zsh` (Powerlevel10k) | `~/` |

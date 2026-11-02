@@ -3,7 +3,6 @@
 # Cek yang kurang: brew bundle check --file=~/dotfiles/Brewfile
 
 tap "nikitabobko/tap"
-tap "FelixKratz/formulae"
 
 # ─── Dasar ───────────────────────────────────────────────
 brew "git"
@@ -31,9 +30,8 @@ brew "go"
 brew "postgresql@15"
 # Node via nvm dan Bun via script resmi masing-masing (lihat README)
 
-# ─── Window manager, bar, input ──────────────────────────
+# ─── Window manager & input ──────────────────────────
 cask "nikitabobko/tap/aerospace"
-brew "felixkratz/formulae/sketchybar"
 cask "karabiner-elements"
 cask "linearmouse"
 cask "raycast"
@@ -42,4 +40,3 @@ cask "raycast"
 cask "ghostty"
 cask "herd"
 cask "font-meslo-lg-nerd-font"  # Ghostty + Powerlevel10k
-cask "font-hack-nerd-font"      # SketchyBar

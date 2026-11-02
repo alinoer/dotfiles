@@ -4,7 +4,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(zsh git shell bin nvim tmux ghostty aerospace sketchybar karabiner)
+PACKAGES=(zsh git shell bin nvim tmux ghostty aerospace karabiner)
 
 step() { printf '\n\033[1;34m==> %s\033[0m\n' "$1"; }
 
