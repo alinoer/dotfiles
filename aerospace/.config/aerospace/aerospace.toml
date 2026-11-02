@@ -1,203 +1,203 @@
-# AeroSpace — tiling window manager
-# Docs: https://nikitabobko.github.io/AeroSpace/guide
-#
-# Hyper = Caps Lock (ditahan), lewat Karabiner = ctrl + alt + cmd
-#
-#   Hyper + h/j/k/l          fokus window kiri/bawah/atas/kanan
-#   Hyper + Shift + h/j/k/l  pindahkan window
-#   Hyper + huruf            pindah workspace (T, B, C, A, D, N, M, E, 1-3)
-#   Hyper + Shift + huruf    kirim window ke workspace itu
-#   Hyper + Tab              workspace sebelumnya
-#   Hyper + f                fullscreen
-#   Hyper + Shift + f        floating <-> tiling
-#   Hyper + / atau \         layout tiles / accordion
-#   Hyper + - / =            resize
-#   Hyper + ;                mode service (reset layout, reload, join)
+# AeroSpace — Hyper = Caps Lock ditahan (Karabiner -> ctrl+alt+cmd)
+#   Hyper + h/j/k/l = fokus, Hyper + Shift + h/j/k/l = pindah window
+#   Hyper + 1-9 / huruf = workspace, Hyper + Shift + ... = kirim window
+# Place a copy of this config to ~/.aerospace.toml
+# After that, you can edit ~/.aerospace.toml to your liking
 
-start-at-login = true
+# It's not necessary to copy all keys to your config.
+# If the key is missing in your config, "default-config.toml" will serve as a fallback
+
+# You can use it to add commands that run after login to macOS user session.
+# 'start-at-login' needs to be 'true' for 'after-login-command' to work
+# Available commands: https://nikitabobko.github.io/AeroSpace/commands
 after-login-command = []
+
+# You can use it to add commands that run after AeroSpace startup.
+# 'after-startup-command' is run after 'after-login-command'
+# Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = []
 
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
+# See: https://nikitabobko.github.io/AeroSpace/guide#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
 accordion-padding = 30
+
+# Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
+
+# Possible values: horizontal|vertical|auto
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Possible values: (qwerty|dvorak)
+# See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 key-mapping.preset = 'qwerty'
 
-# Mouse ikut pindah saat fokus pindah monitor
+# Mouse follows focus when focused monitor changes
+# Drop it from your config, if you don't like this behavior
+# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+# See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# Possible values:
+# - Constant:     gaps.outer.top = 8
+# - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#                 In this example, 24 is a default value when there is no match.
+#                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 10
-inner.vertical   = 10
-outer.left       = 10
-outer.bottom     = 10
-outer.top        = 10
-outer.right      = 10
+inner.horizontal = 12
+inner.vertical =   12
+outer.left =       12
+outer.bottom =     12
+outer.top =        12
+outer.right =      12
 
-# ============================================================
-# Keybinding utama (Hyper = ctrl-alt-cmd)
-# ============================================================
+# 'main' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+# 'main' binding mode must be always presented
 [mode.main.binding]
 
-# Fokus & pindah window (hjkl, sama seperti nvim & tmux)
+# All possible keys:
+# - Letters.        a, b, c, ..., z
+# - Numbers.        0, 1, 2, ..., 9
+# - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
+# - F-keys.         f1, f2, ..., f20
+# - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick,
+#                   leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
+# - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
+#                   keypadMinus, keypadMultiply, keypadPlus
+# - Arrows.         left, down, up, right
+
+# All possible modifiers: cmd, alt, ctrl, shift
+
+# All possible commands: https://nikitabobko.github.io/AeroSpace/commands
+
+# You can uncomment this line to open up terminal with alt + enter shortcut
+# See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
+# alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#layout
+ctrl-alt-cmd-slash = 'layout tiles horizontal vertical'
+ctrl-alt-cmd-comma = 'layout accordion horizontal vertical'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#focus
 ctrl-alt-cmd-h = 'focus left'
 ctrl-alt-cmd-j = 'focus down'
 ctrl-alt-cmd-k = 'focus up'
 ctrl-alt-cmd-l = 'focus right'
 
+# See: https://nikitabobko.github.io/AeroSpace/commands#move
 ctrl-alt-cmd-shift-h = 'move left'
 ctrl-alt-cmd-shift-j = 'move down'
 ctrl-alt-cmd-shift-k = 'move up'
 ctrl-alt-cmd-shift-l = 'move right'
 
-# Layout
-ctrl-alt-cmd-slash     = 'layout tiles horizontal vertical'
-ctrl-alt-cmd-backslash = 'layout accordion horizontal vertical'
-ctrl-alt-cmd-f         = 'fullscreen'
-ctrl-alt-cmd-shift-f   = 'layout floating tiling'
+# See: https://nikitabobko.github.io/AeroSpace/commands#resize
+ctrl-alt-cmd-shift-minus = 'resize smart -50'
+ctrl-alt-cmd-shift-equal = 'resize smart +50'
+# resize height and width separately
+ctrl-alt-cmd-shift-down = 'resize height -50'
+ctrl-alt-cmd-shift-up = 'resize height +50'
+ctrl-alt-cmd-shift-left = 'resize width -50'
+ctrl-alt-cmd-shift-right = 'resize width +50'
 
-# Resize
-ctrl-alt-cmd-minus = 'resize smart -50'
-ctrl-alt-cmd-equal = 'resize smart +50'
-
-# Workspace
-#   T terminal   B browser   C chat   A AI      D dev tools (API/DB)
-#   N notes & calendar       M music  E editor  1-3 bebas
-ctrl-alt-cmd-t = 'workspace T'
-ctrl-alt-cmd-b = 'workspace B'
-ctrl-alt-cmd-c = 'workspace C'
-ctrl-alt-cmd-a = 'workspace A'
-ctrl-alt-cmd-d = 'workspace D'
-ctrl-alt-cmd-n = 'workspace N'
-ctrl-alt-cmd-m = 'workspace M'
-ctrl-alt-cmd-e = 'workspace E'
+# See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 ctrl-alt-cmd-1 = 'workspace 1'
 ctrl-alt-cmd-2 = 'workspace 2'
 ctrl-alt-cmd-3 = 'workspace 3'
+ctrl-alt-cmd-4 = 'workspace 4'
+ctrl-alt-cmd-5 = 'workspace 5'
+ctrl-alt-cmd-6 = 'workspace 6'
+ctrl-alt-cmd-7 = 'workspace 7'
+ctrl-alt-cmd-8 = 'workspace 8'
+ctrl-alt-cmd-9 = 'workspace 9'
+ctrl-alt-cmd-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
+ctrl-alt-cmd-b = 'workspace B'
+ctrl-alt-cmd-c = 'workspace C'
+ctrl-alt-cmd-d = 'workspace D'
+ctrl-alt-cmd-e = 'workspace E'
+ctrl-alt-cmd-f = 'workspace F'
+ctrl-alt-cmd-g = 'workspace G'
+ctrl-alt-cmd-i = 'workspace I'
+ctrl-alt-cmd-m = 'workspace M'
+ctrl-alt-cmd-n = 'workspace N'
+ctrl-alt-cmd-o = 'workspace O'
+ctrl-alt-cmd-p = 'workspace P'
+ctrl-alt-cmd-q = 'workspace Q'
+ctrl-alt-cmd-r = 'workspace R'
+ctrl-alt-cmd-s = 'workspace S'
+ctrl-alt-cmd-t = 'workspace T'
+ctrl-alt-cmd-u = 'workspace U'
+ctrl-alt-cmd-v = 'workspace V'
+ctrl-alt-cmd-w = 'workspace W'
+ctrl-alt-cmd-x = 'workspace X'
+ctrl-alt-cmd-y = 'workspace Y'
+ctrl-alt-cmd-z = 'workspace Z'
 
-ctrl-alt-cmd-shift-t = 'move-node-to-workspace T'
-ctrl-alt-cmd-shift-b = 'move-node-to-workspace B'
-ctrl-alt-cmd-shift-c = 'move-node-to-workspace C'
-ctrl-alt-cmd-shift-a = 'move-node-to-workspace A'
-ctrl-alt-cmd-shift-d = 'move-node-to-workspace D'
-ctrl-alt-cmd-shift-n = 'move-node-to-workspace N'
-ctrl-alt-cmd-shift-m = 'move-node-to-workspace M'
-ctrl-alt-cmd-shift-e = 'move-node-to-workspace E'
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 ctrl-alt-cmd-shift-1 = 'move-node-to-workspace 1'
 ctrl-alt-cmd-shift-2 = 'move-node-to-workspace 2'
 ctrl-alt-cmd-shift-3 = 'move-node-to-workspace 3'
+ctrl-alt-cmd-shift-4 = 'move-node-to-workspace 4'
+ctrl-alt-cmd-shift-5 = 'move-node-to-workspace 5'
+ctrl-alt-cmd-shift-6 = 'move-node-to-workspace 6'
+ctrl-alt-cmd-shift-7 = 'move-node-to-workspace 7'
+ctrl-alt-cmd-shift-8 = 'move-node-to-workspace 8'
+ctrl-alt-cmd-shift-9 = 'move-node-to-workspace 9'
+ctrl-alt-cmd-shift-a = 'move-node-to-workspace A'
+ctrl-alt-cmd-shift-b = 'move-node-to-workspace B'
+ctrl-alt-cmd-shift-c = 'move-node-to-workspace C'
+ctrl-alt-cmd-shift-d = 'move-node-to-workspace D'
+ctrl-alt-cmd-shift-e = 'move-node-to-workspace E'
+ctrl-alt-cmd-shift-f = 'move-node-to-workspace F'
+ctrl-alt-cmd-shift-g = 'move-node-to-workspace G'
+ctrl-alt-cmd-shift-i = 'move-node-to-workspace I'
+ctrl-alt-cmd-shift-m = 'move-node-to-workspace M'
+ctrl-alt-cmd-shift-n = 'move-node-to-workspace N'
+ctrl-alt-cmd-shift-o = 'move-node-to-workspace O'
+ctrl-alt-cmd-shift-p = 'move-node-to-workspace P'
+ctrl-alt-cmd-shift-q = 'move-node-to-workspace Q'
+ctrl-alt-cmd-shift-r = 'move-node-to-workspace R'
+ctrl-alt-cmd-shift-s = 'move-node-to-workspace S'
+ctrl-alt-cmd-shift-t = 'move-node-to-workspace T'
+ctrl-alt-cmd-shift-u = 'move-node-to-workspace U'
+ctrl-alt-cmd-shift-v = 'move-node-to-workspace V'
+ctrl-alt-cmd-shift-w = 'move-node-to-workspace W'
+ctrl-alt-cmd-shift-x = 'move-node-to-workspace X'
+ctrl-alt-cmd-shift-y = 'move-node-to-workspace Y'
+ctrl-alt-cmd-shift-z = 'move-node-to-workspace Z'
 
-ctrl-alt-cmd-tab       = 'workspace-back-and-forth'
+# See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
+ctrl-alt-cmd-tab = 'workspace-back-and-forth'
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
 ctrl-alt-cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
-ctrl-alt-cmd-semicolon = 'mode service'
+# See: https://nikitabobko.github.io/AeroSpace/commands#mode
+ctrl-alt-cmd-shift-semicolon = 'mode service'
 
-# ============================================================
-# Mode service: Hyper + ; lalu tekan salah satu
-# ============================================================
+# 'service' binding mode declaration.
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
-esc       = ['reload-config', 'mode main']           # reload config
-r         = ['flatten-workspace-tree', 'mode main']  # reset layout workspace
-f         = ['layout floating tiling', 'mode main']
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main'] # reset layout
+#s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
+f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 
-h = ['join-with left', 'mode main']
-j = ['join-with down', 'mode main']
-k = ['join-with up', 'mode main']
-l = ['join-with right', 'mode main']
-
-# ============================================================
-# Aplikasi otomatis masuk ke workspace-nya
-# Cek app-id aplikasi lain: `aerospace list-apps`
-# ============================================================
-
-# T — Terminal
-[[on-window-detected]]
-if.app-id = 'com.mitchellh.ghostty'
-run = 'move-node-to-workspace T'
-
-# B — Browser
-[[on-window-detected]]
-if.app-id = 'com.brave.Browser'
-run = 'move-node-to-workspace B'
-
-[[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace B'
-
-# C — Chat
-[[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-run = 'move-node-to-workspace C'
-
-[[on-window-detected]]
-if.app-id = 'com.hnc.Discord'
-run = 'move-node-to-workspace C'
-
-[[on-window-detected]]
-if.app-id = 'net.whatsapp.WhatsApp'
-run = 'move-node-to-workspace C'
-
-[[on-window-detected]]
-if.app-id = 'ru.keepcoder.Telegram'
-run = 'move-node-to-workspace C'
-
-# A — AI
-[[on-window-detected]]
-if.app-id = 'com.anthropic.claudefordesktop'
-run = 'move-node-to-workspace A'
-
-[[on-window-detected]]
-if.app-id = 'com.openai.chat'
-run = 'move-node-to-workspace A'
-
-# D — Dev tools (API & database)
-[[on-window-detected]]
-if.app-id = 'com.postmanlabs.mac'
-run = 'move-node-to-workspace D'
-
-[[on-window-detected]]
-if.app-id = 'com.tinyapp.TablePlus'
-run = 'move-node-to-workspace D'
-
-[[on-window-detected]]
-if.app-id = 'org.jkiss.dbeaver.core.product'
-run = 'move-node-to-workspace D'
-
-# N — Notes & calendar
-[[on-window-detected]]
-if.app-id = 'notion.id'
-run = 'move-node-to-workspace N'
-
-[[on-window-detected]]
-if.app-id = 'md.obsidian'
-run = 'move-node-to-workspace N'
-
-[[on-window-detected]]
-if.app-id = 'com.apple.iCal'
-run = 'move-node-to-workspace N'
-
-[[on-window-detected]]
-if.app-id = 'com.cron.electron'
-run = 'move-node-to-workspace N'
-
-# M — Music
-[[on-window-detected]]
-if.app-id = 'com.spotify.client'
-run = 'move-node-to-workspace M'
-
-# E — Editor GUI
-[[on-window-detected]]
-if.app-id = 'dev.zed.Zed'
-run = 'move-node-to-workspace E'
-
-[[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode'
-run = 'move-node-to-workspace E'
+ctrl-alt-cmd-shift-h = ['join-with left', 'mode main']
+ctrl-alt-cmd-shift-j = ['join-with down', 'mode main']
+ctrl-alt-cmd-shift-k = ['join-with up', 'mode main']
+ctrl-alt-cmd-shift-l = ['join-with right', 'mode main']
 
 # ============================================================
 # Aplikasi kecil / utilitas: floating, tidak ikut di-tile
