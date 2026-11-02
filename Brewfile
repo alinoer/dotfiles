@@ -24,6 +24,7 @@ brew "powerlevel10k"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zoxide"
+brew "eza"                      # alias ls
 
 # ─── Bahasa & database ───────────────────────────────────
 brew "go"
