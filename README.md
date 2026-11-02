@@ -43,6 +43,13 @@ git clone git@github.com:alinoer/dotfiles.git ~/dotfiles
 dan memasang plugin tmux. Aman dijalankan berulang kali. Kalau ada file lama yang bentrok
 (misalnya `~/.zshrc` bawaan), script berhenti dan menyebutkan file mana yang perlu dipindah.
 
+## Catatan zsh
+
+- Node dikelola **nvm** dengan lazy-load: Node default langsung ada di PATH, script nvm baru dimuat saat `nvm` pertama kali dipanggil. Atur versi default dengan `nvm alias default 22`.
+- PATH dirapikan dengan `typeset -U path` (duplikat otomatis dibuang); folder yang tidak ada dilewati.
+- `./node_modules/.bin` sengaja tidak ada di PATH. Pakai `npx` / `bun run`.
+- Tema: Ghostty memakai palet *coolnight*, status bar tmux mengikuti palet yang sama, nvim memakai catppuccin mocha transparan.
+
 ## Secret & config khusus mesin
 
 Token, API key, dan setting yang hanya berlaku di satu mesin disimpan di **`~/.zshrc.local`**
@@ -128,7 +135,7 @@ Leader: **`Space`**. Tekan `Space` lalu tunggu → **which-key** menampilkan sem
 
 **Extras aktif:** copilot, mini-surround, prettier, lang go / json / markdown / typescript, eslint.
 **Tambahan pribadi:**
-- Tema catppuccin mocha (background penuh)
+- Tema catppuccin mocha dengan background transparan (mengikuti warna Ghostty)
 - Home page: layar intro bawaan Neovim (dashboard LazyVim dimatikan)
 - **Tidak ada auto format saat save** (format manual `Space cf`; nyalakan sementara `Space uf` / `Space uF`)
 - Terminal default vertikal di kanan, horizontal tersedia di `Space fh`
