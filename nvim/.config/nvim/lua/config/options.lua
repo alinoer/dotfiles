@@ -9,3 +9,6 @@ vim.g.lazyvim_eslint_auto_format = false
 
 -- Tampilkan layar intro bawaan Neovim saat dibuka tanpa file
 vim.opt.shortmess:remove("I")
+
+-- AI (Copilot) tampil sebagai ghost text inline, bukan item di menu completion
+vim.g.ai_cmp = false

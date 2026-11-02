@@ -87,4 +87,28 @@ return {
       return keys
     end,
   },
+
+  -- Copilot: saran inline (ghost text) dengan tombol seperti config lama
+  --   Ctrl-j  terima saran      Ctrl-l  terima satu kata
+  --   Ctrl-k  saran berikutnya  Ctrl-h  saran sebelumnya
+  --   Ctrl-]  tolak saran       Tab juga bisa untuk menerima
+  {
+    "zbirenbaum/copilot.lua",
+    opts = {
+      suggestion = {
+        keymap = {
+          accept = "<C-j>",
+          accept_word = "<C-l>",
+          next = "<C-k>",
+          prev = "<C-h>",
+          dismiss = "<C-]>",
+        },
+      },
+    },
+  },
+  -- Lepaskan <C-k> dari blink.cmp (signature help) supaya dipakai Copilot
+  {
+    "saghen/blink.cmp",
+    opts = { keymap = { ["<C-k>"] = {} } },
+  },
 }
