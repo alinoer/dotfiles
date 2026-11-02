@@ -1,131 +1,91 @@
+-- Treesitter (branch `main`, butuh Neovim 0.12+ dan `tree-sitter` CLI)
+--
+-- Branch `main` tidak lagi punya `require("nvim-treesitter.configs").setup()`.
+-- Highlight dinyalakan lewat `vim.treesitter.start()` per FileType,
+-- dan textobjects dipasang manual dengan keymap.
+--
+-- Incremental selection sekarang bawaan Neovim 0.12:
+--   v lalu `an` = perluas ke node induk, `in` = perkecil lagi
+
+local parsers = {
+  "typescript", "tsx", "javascript",
+  "go", "gomod", "gosum",
+  "lua", "luadoc",
+  "json", "yaml", "toml",
+  "markdown", "markdown_inline",
+  "bash", "html", "css", "regex",
+  "vim", "vimdoc",
+}
+
 return {
 
-  -- ─── nvim-treesitter ──────────────────────────────────────
-  -- Treesitter adalah parser — ia membaca kode sebagai AST (pohon sintaks),
-  -- bukan sekedar regex. Dampaknya: highlight jauh lebih akurat,
-  -- Neovim "mengerti" struktur kode, bukan hanya mencocokkan pola teks.
-  --
-  -- Tanpa treesitter: highlight berbasis regex → sering salah di edge case
-  -- Dengan treesitter: highlight berbasis struktur bahasa → selalu akurat
   {
     "nvim-treesitter/nvim-treesitter",
-    build  = ":TSUpdate",           -- update parser saat plugin update
-    event  = { "BufReadPost", "BufNewFile" },
-    dependencies = {
-      -- Textobjects berbasis AST: "af" = around function, "ac" = around class
-      -- Tanpa ini, "daf" (delete around function) tidak tersedia
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
+    branch = "main",
+    lazy   = false,          -- plugin ini tidak mendukung lazy-loading
+    build  = ":TSUpdate",
     config = function()
-      local status_ok, configs = pcall(require, "nvim-treesitter.configs")
-      if not status_ok then
-        return
-      end
-      
-      configs.setup({
+      -- Install parser yang belum ada (async, no-op kalau sudah terpasang)
+      require("nvim-treesitter").install(parsers)
 
-        -- Parser yang di-install otomatis
-        -- Setiap bahasa punya parser sendiri yang di-compile lokal
-        ensure_installed = {
-          "typescript", "tsx",        -- TypeScript & React
-          "javascript",               -- JavaScript biasa
-          "go", "gomod", "gosum",     -- Go + module files
-          "lua",                      -- config Neovim
-          "json", "jsonc",            -- config files
-          "yaml",                     -- docker-compose, k8s, CI
-          "toml",                     -- config files modern
-          "markdown", "markdown_inline", -- dokumentasi
-          "bash",                     -- shell scripts
-          "html", "css",              -- web basics
-          "regex",                    -- regex di dalam kode
-          "vim", "vimdoc",            -- built-in help
-        },
-
-        -- Highlight berbasis AST — ini fitur utamanya
-        -- Menggantikan highlight bawaan Neovim yang berbasis regex
-        highlight = {
-          enable = true,
-          -- Matikan highlight bawaan Vim untuk bahasa yang sudah ada parsernya
-          -- Kalau keduanya aktif, bisa terjadi konflik warna
-          additional_vim_regex_highlighting = false,
-        },
-
-        -- Indentasi cerdas berbasis AST
-        -- Ketika tekan Enter di dalam function/object, indent langsung tepat
-        indent = {
-          enable = true,
-        },
-
-        -- Incremental selection: perluas/perkecil selection berdasarkan node AST
-        -- Contoh: cursor di dalam string → <CR> select string →
-        --         <CR> lagi → select argument → <CR> lagi → select pemanggilan fungsi
-        -- Sangat berguna untuk refactor tanpa perlu hafal posisi kurung
-        incremental_selection = {
-          enable  = true,
-          keymaps = {
-            init_selection    = "<CR>",   -- mulai selection di node saat ini
-            node_incremental  = "<CR>",   -- perluas ke parent node
-            node_decremental  = "<BS>",   -- perkecil kembali
-            scope_incremental = "<S-CR>", -- langsung ke scope (function/class)
-          },
-        },
-
-        -- Textobjects berbasis AST — ini yang mengubah workflow editing
-        -- Kamu bisa "target" bagian kode secara semantik:
-        --   "daf" = delete around function (hapus seluruh fungsi termasuk signature)
-        --   "cif" = change inner function (ganti isi fungsi, pertahankan signature)
-        --   "yac" = yank around class
-        --   "vic" = visual inner class
-        textobjects = {
-          select = {
-            enable    = true,
-            lookahead = true,    -- lompat ke textobject berikutnya kalau cursor tidak di atasnya
-            keymaps   = {
-              ["af"] = { query = "@function.outer", desc = "Around function" },
-              ["if"] = { query = "@function.inner", desc = "Inner function" },
-              ["ac"] = { query = "@class.outer",    desc = "Around class" },
-              ["ic"] = { query = "@class.inner",    desc = "Inner class" },
-              ["aa"] = { query = "@parameter.outer", desc = "Around argument" },
-              ["ia"] = { query = "@parameter.inner", desc = "Inner argument" },
-              ["ab"] = { query = "@block.outer",    desc = "Around block" },
-              ["ib"] = { query = "@block.inner",    desc = "Inner block" },
-            },
-          },
-
-          -- Pindah ke function/class berikutnya/sebelumnya
-          -- Sangat berguna di file Go yang punya banyak function
-          move = {
-            enable              = true,
-            set_jumps           = true,    -- catat di jumplist, bisa Ctrl-O untuk balik
-            goto_next_start     = {
-              ["]f"] = { query = "@function.outer", desc = "Next function" },
-              ["]c"] = { query = "@class.outer",    desc = "Next class" },
-            },
-            goto_next_end       = {
-              ["]F"] = { query = "@function.outer", desc = "Next function end" },
-            },
-            goto_previous_start = {
-              ["[f"] = { query = "@function.outer", desc = "Prev function" },
-              ["[c"] = { query = "@class.outer",    desc = "Prev class" },
-            },
-            goto_previous_end   = {
-              ["[F"] = { query = "@function.outer", desc = "Prev function end" },
-            },
-          },
-
-          -- Swap argument: berguna untuk reorder parameter fungsi
-          -- Contoh: function foo(a, b) → cursor di "a" → <leader>sa → foo(b, a)
-          swap = {
-            enable   = true,
-            swap_next = {
-              ["<leader>sa"] = { query = "@parameter.inner", desc = "Swap argument next" },
-            },
-            swap_previous = {
-              ["<leader>sA"] = { query = "@parameter.inner", desc = "Swap argument prev" },
-            },
-          },
-        },
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("treesitter_start", { clear = true }),
+        callback = function(args)
+          local lang = vim.treesitter.language.get_lang(args.match)
+          if not lang or not pcall(vim.treesitter.start, args.buf, lang) then
+            return
+          end
+          -- Indentasi berbasis treesitter
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
       })
+    end,
+  },
+
+  -- Textobjects berbasis AST:
+  --   daf = hapus seluruh function, cif = ganti isi function
+  --   ]f / [f = function berikutnya/sebelumnya, ]c / [c = class
+  --   <leader>sa / <leader>sA = tukar argumen
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
+    event  = { "BufReadPost", "BufNewFile" },
+    config = function()
+      require("nvim-treesitter-textobjects").setup({
+        select = { lookahead = true },
+        move   = { set_jumps = true },
+      })
+
+      local select = require("nvim-treesitter-textobjects.select")
+      local move   = require("nvim-treesitter-textobjects.move")
+      local swap   = require("nvim-treesitter-textobjects.swap")
+      local map    = vim.keymap.set
+
+      local objects = {
+        f = { "@function", "function" },
+        c = { "@class",    "class" },
+        a = { "@parameter", "argument" },
+        b = { "@block",    "block" },
+      }
+      for key, o in pairs(objects) do
+        map({ "x", "o" }, "a" .. key, function()
+          select.select_textobject(o[1] .. ".outer", "textobjects")
+        end, { desc = "Around " .. o[2] })
+        map({ "x", "o" }, "i" .. key, function()
+          select.select_textobject(o[1] .. ".inner", "textobjects")
+        end, { desc = "Inner " .. o[2] })
+      end
+
+      local nxo = { "n", "x", "o" }
+      map(nxo, "]f", function() move.goto_next_start("@function.outer", "textobjects") end,     { desc = "Next function" })
+      map(nxo, "[f", function() move.goto_previous_start("@function.outer", "textobjects") end, { desc = "Prev function" })
+      map(nxo, "]F", function() move.goto_next_end("@function.outer", "textobjects") end,       { desc = "Next function end" })
+      map(nxo, "[F", function() move.goto_previous_end("@function.outer", "textobjects") end,   { desc = "Prev function end" })
+      map(nxo, "]c", function() move.goto_next_start("@class.outer", "textobjects") end,        { desc = "Next class" })
+      map(nxo, "[c", function() move.goto_previous_start("@class.outer", "textobjects") end,    { desc = "Prev class" })
+
+      map("n", "<leader>sa", function() swap.swap_next("@parameter.inner") end,     { desc = "Swap argument next" })
+      map("n", "<leader>sA", function() swap.swap_previous("@parameter.inner") end, { desc = "Swap argument prev" })
     end,
   },
 

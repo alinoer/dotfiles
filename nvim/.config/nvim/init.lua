@@ -2,7 +2,7 @@
 
 -- Set leader keys
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = "\\"
 
 -- Load core configuration
 require("core.options")

@@ -125,21 +125,7 @@ return {
     },
   },
 
-  -- Git signs
-  {
-    "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      signs = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "" },
-        topdelete = { text = "" },
-        changedelete = { text = "▎" },
-        untracked = { text = "▎" },
-      },
-    },
-  },
+  -- Git signs: dikonfigurasi di plugins/editing.lua
 
   -- ─── Indent Visual ───────────────────────────────────────
   -- indent-blankline: garis indent — sangat membantu di Go & nested TS

@@ -9,7 +9,7 @@ return {
       { "<leader>ff", "<cmd>Telescope find_files<cr>",              desc = "Find files" },
       { "<leader>fg",       "<cmd>Telescope live_grep<cr>",               desc = "Live grep" },
       { "<leader>?",       "<cmd>Telescope oldfiles<cr>",                desc = "Recent files" },
-      { "<leader>bb",      "<cmd>Telescope buffers<cr>",                 desc = "Buffers" },
+      { "<leader>fb",      "<cmd>Telescope buffers<cr>",                 desc = "Buffers" },
       { "<leader>sh",      "<cmd>Telescope help_tags<cr>",               desc = "Help" },
       { "<leader>sk",      "<cmd>Telescope keymaps<cr>",                 desc = "Keymaps" },
       { "<leader>sd",      "<cmd>Telescope diagnostics<cr>",             desc = "Diagnostics" },
@@ -182,12 +182,36 @@ return {
       spec   = {
         -- Daftarkan grup leader key supaya rapi di which-key
         { "<leader>b",  group = "buffer" },
+        { "<leader>f",  group = "find" },
         { "<leader>s",  group = "search" },
         { "<leader>g",  group = "git" },
+        { "<leader>gt", group = "git toggle" },
         { "<leader>l",  group = "lsp" },
-        { "<leader>q",  group = "quickfix" },
+        { "<leader>q",  group = "quit/quickfix" },
+        { "<leader>t",  group = "terminal" },
+        { "<leader>w",  group = "window" },
       },
     },
+  },
+
+  -- ─── vim-tmux-navigator ──────────────────────────────────
+  -- <C-h/j/k/l> pindah antar split nvim DAN pane tmux tanpa prefix.
+  -- Pasangannya ada di tmux.conf (plugin dengan nama yang sama).
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft", "TmuxNavigateDown", "TmuxNavigateUp",
+      "TmuxNavigateRight", "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<C-h>", "<cmd>TmuxNavigateLeft<cr>",  desc = "Window/pane kiri" },
+      { "<C-j>", "<cmd>TmuxNavigateDown<cr>",  desc = "Window/pane bawah" },
+      { "<C-k>", "<cmd>TmuxNavigateUp<cr>",    desc = "Window/pane atas" },
+      { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Window/pane kanan" },
+    },
+    init = function()
+      vim.g.tmux_navigator_no_wrap = 1
+    end,
   },
 
 }

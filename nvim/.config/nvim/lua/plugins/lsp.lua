@@ -18,23 +18,20 @@ return {
     },
   },
 
-  -- ─── Mason-lspconfig: Bridge Mason ↔ lspconfig ─────────
+  -- ─── Mason-lspconfig: install server via Mason ─────────
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      ensure_installed = {
-        "ts_ls",       -- TypeScript/JavaScript
-        "gopls",        -- Go
-        "eslint",       -- ESLint
-        "lua_ls",       -- Lua
-      },
-      automatic_installation = true,
+      ensure_installed = { "ts_ls", "gopls", "eslint", "lua_ls" },
+      -- Server yang terinstall via Mason otomatis di-enable (vim.lsp.enable)
+      automatic_enable = true,
     },
   },
 
-  -- ─── LSP Configuration ─────────────────────────────────
+  -- ─── LSP (API bawaan Neovim 0.11+: vim.lsp.config / vim.lsp.enable) ──
+  -- nvim-lspconfig hanya menyediakan config default tiap server (folder lsp/).
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -44,155 +41,87 @@ return {
       { "j-hui/fidget.nvim", opts = {} },
     },
     config = function()
-      -- Disable LSP logging to prevent spam
-      vim.lsp.set_log_level("ERROR")
-      
-      -- Suppress deprecation warnings temporarily
-      local notify = vim.notify
-      vim.notify = function(msg, level, opts)
-        if type(msg) == "string" then
-          -- Filter out lspconfig deprecation warnings
-          if msg:match("require.*lspconfig.*framework.*deprecated") or
-             msg:match("tsserver is deprecated") or
-             msg:match("Feature will be removed") then
-            return
-          end
-        end
-        notify(msg, level, opts)
-      end
-      
-      -- Diagnostic configuration
+      vim.lsp.log.set_level(vim.log.levels.ERROR)
+
+      -- Diagnostic
       vim.diagnostic.config({
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = "",
-            [vim.diagnostic.severity.WARN] = "",
-            [vim.diagnostic.severity.HINT] = "",
-            [vim.diagnostic.severity.INFO] = "",
+            [vim.diagnostic.severity.WARN]  = "",
+            [vim.diagnostic.severity.HINT]  = "",
+            [vim.diagnostic.severity.INFO]  = "",
           },
         },
-        virtual_text = {
-          prefix = "●",
-          source = "if_many",
-        },
-        float = {
-          border = "rounded",
-          source = true,
-          header = "",
-          prefix = "",
-        },
-        underline = true,
+        virtual_text     = { prefix = "●", source = "if_many" },
+        float            = { border = "rounded", source = true, header = "", prefix = "" },
+        underline        = true,
         update_in_insert = false,
-        severity_sort = true,
+        severity_sort    = true,
       })
 
-      -- LSP keymaps (only when LSP is attached)
-      local on_attach = function(client, bufnr)
-        -- Disable semantic tokens for better performance
-        if client.supports_method("textDocument/semanticTokens") then
-          client.server_capabilities.semanticTokensProvider = nil
-        end
-        
-        local map = function(keys, func, desc)
-          vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
-        end
+      -- Config untuk semua server
+      vim.lsp.config("*", {
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+      })
 
-        -- Navigation
-        map("gd", vim.lsp.buf.definition, "Go to definition")
-        map("gD", vim.lsp.buf.declaration, "Go to declaration")
-        map("gi", vim.lsp.buf.implementation, "Go to implementation")
-        map("gr", vim.lsp.buf.references, "References")
-        map("gt", vim.lsp.buf.type_definition, "Type definition")
-
-        -- Info
-        map("K", vim.lsp.buf.hover, "Hover docs")
-        map("<C-k>", vim.lsp.buf.signature_help, "Signature help")
-
-        -- Actions
-        map("<leader>lr", vim.lsp.buf.rename, "Rename")
-        map("<leader>la", vim.lsp.buf.code_action, "Code action")
-        map("<leader>lf", function()
-          vim.lsp.buf.format({ async = true })
-        end, "Format")
-
-        -- Diagnostics
-        map("<leader>ld", vim.diagnostic.open_float, "Line diagnostics")
-        map("[d", vim.diagnostic.goto_prev, "Prev diagnostic")
-        map("]d", vim.diagnostic.goto_next, "Next diagnostic")
-      end
-
-      -- LSP capabilities (will be enhanced by cmp)
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities.textDocument.completion.completionItem.snippetSupport = true
-      capabilities.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-      }
-      
-      -- Try to enhance capabilities with cmp if available
-      local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-      if ok then
-        capabilities = cmp_lsp.default_capabilities(capabilities)
-      end
-      
-      -- Very simple server setup using new vim.lsp.config API
-      vim.notify = notify -- Restore notify immediately
-      
-      -- Setup LSP servers with the new API
-      local servers = {
-        ts_ls = {
-          on_attach = on_attach,
-          capabilities = capabilities,
-        },
-        eslint = {
-          on_attach = function(client, bufnr)
-            on_attach(client, bufnr)
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = bufnr,
-              command = "EslintFixAll",
-            })
-          end,
-          capabilities = capabilities,
-        },
-        gopls = {
-          on_attach = on_attach,
-          capabilities = capabilities,
-        },
-        lua_ls = {
-          on_attach = on_attach,
-          capabilities = capabilities,
-          settings = {
-            Lua = {
-              runtime = { version = "LuaJIT" },
-              workspace = {
-                checkThirdParty = false,
-                library = vim.api.nvim_get_runtime_file("", true),
-              },
-              diagnostics = { globals = { "vim" } },
-              telemetry = { enable = false },
-            },
+      -- Config khusus per server
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            runtime     = { version = "LuaJIT" },
+            workspace   = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+            diagnostics = { globals = { "vim" } },
+            telemetry   = { enable = false },
           },
         },
-      }
-      
-      -- Use new vim.lsp.config API if available, fallback to lspconfig
-      if vim.lsp.config then
-        for server, config in pairs(servers) do
-          pcall(function()
-            vim.lsp.config[server] = config
-          end)
-        end
-      else
-        -- Fallback to old lspconfig for older Neovim versions
-        local ok, lspconfig = pcall(require, "lspconfig")
-        if ok then
-          for server, config in pairs(servers) do
-            pcall(function()
-              lspconfig[server].setup(config)
-            end)
+      })
+
+      vim.lsp.enable({ "ts_ls", "gopls", "eslint", "lua_ls" })
+
+      -- Keymap & perilaku saat LSP attach ke buffer
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("lsp_attach", { clear = true }),
+        callback = function(args)
+          local bufnr  = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if not client then return end
+
+          -- Matikan semantic tokens (lebih ringan, warna tetap dari treesitter)
+          client.server_capabilities.semanticTokensProvider = nil
+
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
           end
-        end
-      end
+
+          -- Navigasi
+          map("gd", vim.lsp.buf.definition,      "Go to definition")
+          map("gD", vim.lsp.buf.declaration,     "Go to declaration")
+          map("gi", vim.lsp.buf.implementation,  "Go to implementation")
+          map("gr", vim.lsp.buf.references,      "References")
+          map("gt", vim.lsp.buf.type_definition, "Type definition")
+
+          -- Info (signature help di insert mode: <C-s>, bawaan Neovim)
+          map("K",  vim.lsp.buf.hover,          "Hover docs")
+          map("gK", vim.lsp.buf.signature_help, "Signature help")
+
+          -- Aksi
+          map("<leader>lr", vim.lsp.buf.rename,      "Rename")
+          map("<leader>la", vim.lsp.buf.code_action, "Code action")
+          map("<leader>lf", function() vim.lsp.buf.format({ async = true }) end, "Format")
+
+          -- Diagnostic ([d / ]d sudah bawaan Neovim)
+          map("<leader>ld", vim.diagnostic.open_float, "Line diagnostics")
+
+          -- ESLint: fix otomatis saat save
+          if client.name == "eslint" then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer  = bufnr,
+              command = "silent! LspEslintFixAll",
+            })
+          end
+        end,
+      })
     end,
   },
 

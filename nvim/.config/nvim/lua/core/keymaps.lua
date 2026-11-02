@@ -1,7 +1,3 @@
--- Leader key — WAJIB di-set di sini, sebelum lazy load
-vim.g.mapleader      = " "
-vim.g.maplocalleader = "\\"
-
 local map = vim.keymap.set
 
 -- ─── Escape ──────────────────────────────────────────────
@@ -17,10 +13,8 @@ map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
 -- ─── Navigasi window ─────────────────────────────────────
-map("n", "<C-h>", "<C-w>h", { desc = "Window kiri" })
-map("n", "<C-j>", "<C-w>j", { desc = "Window bawah" })
-map("n", "<C-k>", "<C-w>k", { desc = "Window atas" })
-map("n", "<C-l>", "<C-w>l", { desc = "Window kanan" })
+-- <C-h/j/k/l> diatur plugin vim-tmux-navigator (lihat plugins/navigation.lua),
+-- jadi bisa pindah mulus antara split nvim dan pane tmux.
 
 -- ─── Resize window ───────────────────────────────────────
 map("n", "<C-Up>",    "<cmd>resize +2<cr>",          { desc = "Tambah tinggi" })
@@ -83,18 +77,3 @@ map("n", "<leader>qp", "<cmd>cprev<cr>",  { desc = "Quickfix prev" })
 
 -- ─── Terminal ────────────────────────────────────────────
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Keluar terminal mode" })
-
--- ─── Which-key groups ────────────────────────────────────
-local wk_ok, wk = pcall(require, "which-key")
-if wk_ok then
-  wk.add({
-    { "<leader>b",  group = "buffer" },
-    { "<leader>s",  group = "search" },
-    { "<leader>g",  group = "git" },
-    { "<leader>gt", group = "git toggle" },
-    { "<leader>l",  group = "lsp" },
-    { "<leader>q",  group = "quickfix" },
-    { "<leader>t",  group = "terminal" },
-    { "<leader>w",  group = "window" },
-  })
-end
