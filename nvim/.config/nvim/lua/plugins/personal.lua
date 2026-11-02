@@ -1,18 +1,18 @@
 -- Plugin & override pribadi di atas LazyVim
 return {
 
-  -- Colorscheme: catppuccin mocha, background transparan
+  -- Colorscheme: catppuccin mocha (background penuh, bukan transparan)
   {
     "catppuccin/nvim",
     name = "catppuccin",
     opts = {
       flavour = "mocha",
-      transparent_background = true,
+      transparent_background = false,
     },
   },
   {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "catppuccin" },
+    opts = { colorscheme = "catppuccin-mocha" },
   },
 
   -- Ctrl-h/j/k/l pindah mulus antara split nvim dan pane tmux
