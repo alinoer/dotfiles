@@ -11,10 +11,12 @@ Setiap folder di sini adalah satu "paket" yang strukturnya meniru `$HOME`.
 | `aerospace` | tiling window manager | `~/.config/aerospace` |
 | `sketchybar` | menu bar | `~/.config/sketchybar` |
 | `karabiner` | remap keyboard | `~/.config/karabiner` |
-| `git` | global gitignore | `~/.config/git` |
-| `fish` | env dari `uv` | `~/.config/fish` |
+| `git` | `.gitconfig` + global gitignore | `~/.gitconfig`, `~/.config/git` |
+| `zsh` | `.zshrc`, `.zprofile`, `.p10k.zsh` (Powerlevel10k) | `~/` |
+| `shell` | alias project (`pj`, `pjcd`, `work`) | `~/.config/shell` |
+| `bin` | script `workspace` (session tmux per project) | `~/bin` |
 
-Shell utama: **zsh** (belum masuk repo).
+File di root: `Brewfile` (daftar tool), `install.sh` (setup mesin baru).
 
 ---
 
@@ -29,21 +31,29 @@ git add -A && git commit -m "nvim: ..." && git push
 
 - Pesan commit diberi prefix nama paket: `nvim:`, `tmux:`, `ghostty:`, dst.
 - Eksperimen besar → buat branch dulu (`git switch -c coba-xyz`), jangan copy folder backup.
-- Jangan pernah memasukkan `gh`, `github-copilot`, atau file berisi token.
+- Jangan pernah memasukkan `gh`, `github-copilot`, atau token apa pun (pakai `~/.zshrc.local`).
 
 ## Setup di mesin baru
 
 ```zsh
-brew install stow neovim tmux tree-sitter-cli ripgrep fd lazygit
 git clone git@github.com:alinoer/dotfiles.git ~/dotfiles
-cd ~/dotfiles && stow */
-
-# plugin tmux
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-# lalu buka tmux dan tekan: prefix I
+~/dotfiles/install.sh
 ```
 
-Buka `nvim` sekali: plugin dan parser treesitter ter-install otomatis.
+`install.sh` meng-install Homebrew + semua tool di `Brewfile`, membuat symlink dengan stow,
+dan memasang plugin tmux. Aman dijalankan berulang kali. Kalau ada file lama yang bentrok
+(misalnya `~/.zshrc` bawaan), script berhenti dan menyebutkan file mana yang perlu dipindah.
+
+## Secret & config khusus mesin
+
+Token, API key, dan setting yang hanya berlaku di satu mesin disimpan di **`~/.zshrc.local`**
+(di luar repo, `chmod 600`). File ini otomatis di-`source` di akhir `.zshrc`.
+
+## Menambah tool / config baru
+
+- Tool baru → tambahkan ke `Brewfile` (`brew bundle check` untuk mengecek yang kurang).
+- Config baru → buat paket: `mkdir -p app/.config/app`, pindahkan file, lalu `stow app`.
+  Untuk file yang sudah ada: buat file kosong di posisi yang sama di paket, lalu `stow --adopt app`.
 
 **Kebutuhan versi:** Neovim **0.11.2+** (disarankan 0.12), tmux **3.1+**, `tree-sitter` CLI **0.26+** (dari brew, bukan npm).
 
