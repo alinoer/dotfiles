@@ -46,6 +46,10 @@ return {
       delete_to_trash = true,
       skip_confirm_for_simple_edits = false,
       view_options = { show_hidden = false, natural_order = true },
+      keymaps = {
+        ["q"] = { "actions.close", mode = "n" },     -- tutup oil (seperti config lama)
+        ["<Esc>"] = { "actions.close", mode = "n" },
+      },
     },
   },
   -- Terminal: default vertikal (kanan), tetap bisa horizontal (bawah)
