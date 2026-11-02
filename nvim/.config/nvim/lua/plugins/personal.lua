@@ -49,33 +49,40 @@ return {
     },
   },
   -- Terminal: default vertikal (kanan), tetap bisa horizontal (bawah)
-  --   Ctrl-/       toggle terminal vertikal di root project
-  --   <leader>fv   terminal vertikal
-  --   <leader>fh   terminal horizontal (terminal terpisah dari yang vertikal)
+  -- Posisi hanya diatur di tombol ini, supaya lazygit dkk. tetap float.
+  --   Ctrl-/       buka/fokus terminal vertikal di root project
+  --   <leader>ft   terminal vertikal (root project), <leader>fT (cwd)
+  --   <leader>fv   toggle terminal vertikal
+  --   <leader>fh   toggle terminal horizontal (terminal terpisah)
   {
     "folke/snacks.nvim",
-    opts = {
-      terminal = {
-        win = { position = "right", width = 0.4 },
-      },
-    },
-    keys = {
-      {
-        "<leader>fv",
-        function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root() }) end,
-        desc = "Terminal vertikal",
-      },
-      {
-        "<leader>fh",
-        function()
-          Snacks.terminal.toggle(nil, {
-            cwd = LazyVim.root(),
-            count = 2,
-            win = { position = "bottom", height = 0.3 },
-          })
-        end,
-        desc = "Terminal horizontal",
-      },
-    },
+    keys = function(_, keys)
+      local right = { position = "right", width = 0.4 }
+      local bottom = { position = "bottom", height = 0.3 }
+      local function vfocus()
+        Snacks.terminal.focus(nil, { cwd = LazyVim.root(), win = right })
+      end
+      vim.list_extend(keys, {
+        { "<c-/>", vfocus, mode = { "n", "t" }, desc = "Terminal vertikal" },
+        { "<c-_>", vfocus, mode = { "n", "t" }, desc = "which_key_ignore" },
+        { "<leader>ft", vfocus, desc = "Terminal vertikal (root)" },
+        {
+          "<leader>fT",
+          function() Snacks.terminal.focus(nil, { win = right }) end,
+          desc = "Terminal vertikal (cwd)",
+        },
+        {
+          "<leader>fv",
+          function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root(), win = right }) end,
+          desc = "Toggle terminal vertikal",
+        },
+        {
+          "<leader>fh",
+          function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root(), count = 2, win = bottom }) end,
+          desc = "Toggle terminal horizontal",
+        },
+      })
+      return keys
+    end,
   },
 }
