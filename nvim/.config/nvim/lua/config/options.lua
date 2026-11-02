@@ -6,3 +6,6 @@
 -- Toggle sementara: <leader>uf (buffer ini) / <leader>uF (global)
 vim.g.autoformat = false
 vim.g.lazyvim_eslint_auto_format = false
+
+-- Tampilkan layar intro bawaan Neovim saat dibuka tanpa file
+vim.opt.shortmess:remove("I")

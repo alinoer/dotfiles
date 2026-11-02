@@ -56,6 +56,8 @@ return {
   --   <leader>fh   toggle terminal horizontal (terminal terpisah)
   {
     "folke/snacks.nvim",
+    -- Home page: matikan dashboard LazyVim, kembali ke layar awal bawaan Neovim
+    opts = { dashboard = { enabled = false } },
     keys = function(_, keys)
       local right = { position = "right", width = 0.4 }
       local bottom = { position = "bottom", height = 0.3 }
