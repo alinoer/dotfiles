@@ -1,43 +1,18 @@
 -- Plugin & override pribadi di atas LazyVim
 return {
 
-  -- Colorscheme: tokyonight "night" dengan palet coolnight (sama dengan Ghostty)
+  -- Colorscheme: catppuccin mocha (background penuh, bukan transparan)
   {
-    "folke/tokyonight.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     opts = {
-      style = "night",
-      on_colors = function(c)
-        local bg = "#011423" -- = background Ghostty
-        local bg_dark = "#011628" -- float/sidebar sedikit lebih terang
-        local bg_highlight = "#143652"
-        local bg_search = "#0A64AC"
-        local bg_visual = "#275378"
-        local fg = "#CBE0F0" -- = foreground Ghostty
-        local fg_dark = "#B4D0E9"
-        local fg_gutter = "#627E97"
-        local border = "#547998"
-
-        c.bg = bg
-        c.bg_dark = bg_dark
-        c.bg_float = bg_dark
-        c.bg_highlight = bg_highlight
-        c.bg_popup = bg_dark
-        c.bg_search = bg_search
-        c.bg_sidebar = bg_dark
-        c.bg_statusline = bg_dark
-        c.bg_visual = bg_visual
-        c.border = border
-        c.fg = fg
-        c.fg_dark = fg_dark
-        c.fg_float = fg
-        c.fg_gutter = fg_gutter
-        c.fg_sidebar = fg_dark
-      end,
+      flavour = "mocha",
+      transparent_background = false,
     },
   },
   {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "tokyonight" },
+    opts = { colorscheme = "catppuccin-mocha" },
   },
 
   -- Ctrl-h/j/k/l pindah mulus antara split nvim dan pane tmux
